@@ -16,13 +16,13 @@ import org.springframework.stereotype.Service;
 import com.indeas.curso.ws.domain.Role;
 import com.indeas.curso.ws.domain.User;
 import com.indeas.curso.ws.repository.UserRepository;
-import com.indeas.curso.ws.service.exception.ObjectNotFoundException;
+import com.indeas.curso.ws.service.exception.ObjectNotEnabledException;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
 	@Autowired
-	private UserRepository userRepository;
+	UserRepository userRepository;
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -30,7 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 		if (!user.isPresent()) {
 			throw new UsernameNotFoundException(String.format("UserNotExist"));
 		} else if (!user.get().isEnabled()) {
-			throw new ObjectNotFoundException(String.format("UserNotEnabled"));
+			throw new ObjectNotEnabledException(String.format("UserNotEnabled"));
 		}
 		return new UserRepositoryUserDetails(user.get());
 	}
@@ -47,7 +47,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 		return getGrantedAuthorities(roles);
 	}
 
-	@SuppressWarnings("serial")
 	private final static class UserRepositoryUserDetails extends User implements UserDetails {
 
 		public UserRepositoryUserDetails(User user) {
