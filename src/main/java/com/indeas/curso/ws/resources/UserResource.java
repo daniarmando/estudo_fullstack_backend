@@ -31,7 +31,7 @@ import com.indeas.curso.ws.service.UserService;
 public class UserResource {
 
 	@Autowired
-	UserService userService;
+	private UserService userService;
 	
 	@Autowired
 	private DefaultTokenServices tokenServices;
